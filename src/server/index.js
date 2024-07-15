@@ -10,6 +10,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const mainRouter = require("./routes");
 const mongoUri = require("../lib/config/mongoUri");
+const createClientModel = require("../models/Client");
 
 /**
  * Main function
@@ -63,6 +64,17 @@ async function startServer(conn) {
 			]);
 		}
 	}));
+	
+	const models = {
+		Client: createClientModel(conn),
+	};
+	
+	// Middleware
+	app.use((req, res, next) => {
+		req.models = models;
+		
+		next();
+	});
 	
 	app.use(mainRouter());
 	
