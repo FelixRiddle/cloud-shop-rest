@@ -92,7 +92,40 @@ function clientRouter() {
 					}]
 				});
 		}
-	})
+	});
+	
+	// Update the client completely
+	router.put("/:clientId", async(req, res) => {
+		try {
+			const {
+				Client
+			} = req.models;
+			
+			const clientId = req.params.clientId;
+			const client = await Client.findOneAndUpdate(
+				{
+					_id: clientId
+				},
+				req.body,
+				{
+					new: true,
+				});
+			
+			return res.send({
+				client,
+			});
+		} catch(err) {
+			console.error(err);
+			return res
+				.status(500)
+				.send({
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
+				});
+		}
+	});
 	
 	return router;
 }
