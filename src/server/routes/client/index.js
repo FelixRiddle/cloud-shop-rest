@@ -101,6 +101,7 @@ function clientRouter() {
 				Client
 			} = req.models;
 			
+			// TODO: This requires authentication
 			const clientId = req.params.clientId;
 			const client = await Client.findOneAndUpdate(
 				{
@@ -113,6 +114,36 @@ function clientRouter() {
 			
 			return res.send({
 				client,
+			});
+		} catch(err) {
+			console.error(err);
+			return res
+				.status(500)
+				.send({
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
+				});
+		}
+	});
+	
+	router.delete("/:clientId", async(req, res, next) => {
+		try {
+			const {
+				Client
+			} = req.models;
+			
+			const clientId = req.params.clientId;
+			
+			// TODO: This requires authentication
+			const client = await Client.findOneAndDelete({ _id: clientId });
+			
+			return res.send({
+				messages: [{
+					message: "Client deleted",
+					type: "success"
+				}]
 			});
 		} catch(err) {
 			console.error(err);
