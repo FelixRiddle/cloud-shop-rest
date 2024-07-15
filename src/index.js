@@ -1,14 +1,19 @@
-const express = require("express");
+const mongooseConnection = require("./lib/config/db");
+const startServer = require("./server");
 
-const mainRouter = require("./routes");
+const dotenv = require("dotenv");
 
-const app = express();
+/**
+ * Main
+ */
+async function main() {
+	dotenv.config({
+		path: ".env"
+	});
+	
+	const conn = mongooseConnection();
+	
+	await startServer(conn);
+}
 
-app.use(mainRouter());
-
-const PORT = process.env.PORT || 3008;
-
-app.listen(PORT, () => {
-	console.log(`Server listening at`, PORT);
-});
-
+main();
