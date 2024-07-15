@@ -1,0 +1,32 @@
+{
+  "name": "cloud-shop-rest",
+  "version": "1.0.0",
+  "description": "Cloud shop REST API",
+  "main": "index.js",
+  "scripts": {
+	"dev": "nodemon ./src/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/FelixRiddle/cloud-shop-rest.git"
+  },
+  "keywords": [
+    "shop",
+    "client",
+    "product",
+    "ecommerce"
+  ],
+  "author": "Felix Riddle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FelixRiddle/cloud-shop-rest/issues"
+  },
+  "homepage": "https://github.com/FelixRiddle/cloud-shop-rest#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
