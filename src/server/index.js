@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require("uuid");
 const mainRouter = require("./routes");
 const mongoUri = require("../lib/config/mongoUri");
 const createClientModel = require("../models/Client");
+const createProductModel = require("../models/Product");
 
 /**
  * Main function
@@ -67,6 +68,7 @@ async function startServer(conn) {
 	
 	const models = {
 		Client: createClientModel(conn),
+		Product: createProductModel(conn),
 	};
 	
 	// Middleware

@@ -1,6 +1,7 @@
 const express = require("express");
 
 const clientRouter = require("./client");
+const productRouter = require("./product");
 
 /**
  * Main router
@@ -9,6 +10,7 @@ function mainRouter() {
 	const router = express.Router();
 	
 	router.use("/client", clientRouter());
+	router.use("/product", productRouter());
 	
 	router.use((req, res) => {
 		return res
