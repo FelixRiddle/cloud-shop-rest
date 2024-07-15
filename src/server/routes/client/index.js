@@ -30,4 +30,28 @@ clientRouter.post("/", async (req, res) => {
 	}
 });
 
+clientRouter.get("/", async(req, res) => {
+	try {
+		const {
+			Client
+		} = req.models;
+		
+		const clients = await Client.find({});
+		
+		return res.send({
+			clients,
+		});
+	} catch(err) {
+		console.error(err);
+		return res
+			.status(500)
+			.send({
+				messages: [{
+					message: "Error 500: Internal error",
+					type: "error"
+				}]
+			});
+	}
+});
+
 module.exports = clientRouter;

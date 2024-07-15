@@ -21,8 +21,9 @@ function createClientModel(mongoose) {
 		email: {
 			type: String,
 			unique: true,
-			lowercase: true,
 			trim: true,
+			// Lowercase the email or else we will have problems when trying to find users
+			lowercase: true,
 		},
 		phoneNumber: {
 			type: String,
