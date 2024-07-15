@@ -8,7 +8,7 @@ const clientRouter = require("./client");
 function mainRouter() {
 	const router = express.Router();
 	
-	router.use("/client", clientRouter);
+	router.use("/client", clientRouter());
 	
 	router.use((req, res) => {
 		return res

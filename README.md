@@ -2,6 +2,12 @@
 
 Cloud shop REST API, following the course, this is the last project.
 
+## Correct implementation
+
+For the correct implementation this spec describes how to do it.
+
+- [OpenAPI specification](https://swagger.io/specification/)
+
 ## Environment variables
 
 These are the environment variables that can be configured.

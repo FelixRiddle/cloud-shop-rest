@@ -1,57 +1,100 @@
 const express = require('express');
 
-const clientRouter = express.Router();
-
-clientRouter.post("/", async (req, res) => {
-	try {
-		const {
-			Client
-		} = req.models;
-		
-		const clientModel = new Client(req.body);
-		await clientModel.save();
-		
-		return res.send({
-			messages: [{
-				message: "User created",
-				type: "success"
-			}]
-		});
-	} catch(err) {
-		console.error(err);
-		return res
-			.status(500)
-			.send({
+/**
+ * Client router
+ */
+function clientRouter() {
+	const router = express.Router();
+	
+	router.post("/", async (req, res) => {
+		try {
+			const {
+				Client
+			} = req.models;
+			
+			const clientModel = new Client(req.body);
+			await clientModel.save();
+			
+			return res.send({
 				messages: [{
-					message: "Error 500: Internal error",
-					type: "error"
+					message: "User created",
+					type: "success"
 				}]
 			});
-	}
-});
-
-clientRouter.get("/", async(req, res) => {
-	try {
-		const {
-			Client
-		} = req.models;
-		
-		const clients = await Client.find({});
-		
-		return res.send({
-			clients,
-		});
-	} catch(err) {
-		console.error(err);
-		return res
-			.status(500)
-			.send({
-				messages: [{
-					message: "Error 500: Internal error",
-					type: "error"
-				}]
+		} catch(err) {
+			console.error(err);
+			return res
+				.status(500)
+				.send({
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
+				});
+		}
+	});
+	
+	router.get("/", async(req, res) => {
+		try {
+			const {
+				Client
+			} = req.models;
+			
+			const clients = await Client.find({});
+			
+			return res.send({
+				clients,
 			});
-	}
-});
+		} catch(err) {
+			console.error(err);
+			return res
+				.status(500)
+				.send({
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
+				});
+		}
+	});
+	
+	router.get("/:clientId", async(req, res) => {
+		try {
+			const {
+				Client
+			} = req.models;
+			
+			const clientId = req.params.clientId;
+			
+			const client = await Client.findById(clientId);
+			
+			if(!client) {
+				return res.status(404)
+					.send({
+						messages: [{
+							message: "Client doesn't exists",
+							type: "error"
+						}]
+					});
+			}
+			
+			return res.send({
+				client
+			});
+		} catch(err) {
+			console.error(err);
+			return res
+				.status(500)
+				.send({
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
+				});
+		}
+	})
+	
+	return router;
+}
 
 module.exports = clientRouter;
