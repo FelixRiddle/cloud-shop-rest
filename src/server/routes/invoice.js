@@ -127,6 +127,51 @@ function invoiceRouter() {
 		}
 	});
 	
+	// Put
+	router.put("/:invoiceId", async(req, res) => {
+		try {
+			const {
+				Invoice
+			} = req.models;
+			
+			const invoiceId = req.params.invoiceId;
+			const invoice = await Invoice.findOneAndUpdate(
+				{
+					_id: invoiceId,
+				},
+				req.body,
+				{
+					new: true
+				}
+			);
+			
+			req.flash("messages", [{
+				message: "Invoice updated",
+				type: "success"
+			}]);
+			
+			const extra = await expandData(req);
+			return res.send({
+				invoice,
+				...extra,
+			});
+		} catch(err) {
+			console.error(err);
+			
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
 	return router;
 }
 
