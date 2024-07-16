@@ -21,8 +21,8 @@ async function expandData(req, options = {
 	// 	User
 	// } = req.models;
 	
-	// // User
-	// let user = undefined;
+	// User
+	let user = undefined;
 	// if(req.user) {
 	// 	// Update session if required
 	// 	if(!options.useSession) {

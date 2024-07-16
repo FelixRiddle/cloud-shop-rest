@@ -113,7 +113,6 @@ function productRouter() {
 		}
 	});
 	
-	// FIXME: When using postman the body is not read by express or postman doesn't sends it
 	router.put("/:productId", productImage, async (req, res) => {
 		try {
 			const {
@@ -157,6 +156,43 @@ function productRouter() {
 			
 			return res.send({
 				product: newProduct
+			});
+		} catch(err) {
+			console.error(err);
+			
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
+	router.delete("/:productId", async (req, res) => {
+		try {
+			const {
+				Product
+			} = req.models;
+			
+			const productId = req.params.productId;
+			await Product.findOneAndDelete({
+				_id: productId
+			});
+			
+			req.flash("messages", [{
+				message: "Product deleted",
+				type: "success"
+			}]);
+			
+			const extra = await expandData(req);
+			return res.send({
+				...extra
 			});
 		} catch(err) {
 			console.error(err);
