@@ -1,9 +1,6 @@
 # All of public should be ignored, but I have to dynamically insert
 # images with webpack and I don't have time for that now
-public/js
-public/uploads/
-public/package/
-public/user/
+public/
 
 .cache/
 
