@@ -172,6 +172,42 @@ function invoiceRouter() {
 		}
 	});
 	
+	// Delete
+	router.delete("/:invoiceId", async(req, res) => {
+		try {
+			const {
+				Invoice 
+			} = req.models;
+			
+			const invoiceId = req.params.invoiceId;
+			const invoice = await Invoice.findOneAndDelete(invoiceId);
+			
+			req.flash("messages", [{
+				message: "Invoice deleted",
+				type: "success"
+			}]);
+			
+			const extra = await expandData(req);
+			return res.send({
+				...extra,
+			});
+		} catch(err) {
+			console.error(err);
+			
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
 	return router;
 }
 
