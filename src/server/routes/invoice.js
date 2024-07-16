@@ -7,6 +7,7 @@ const expandData = require('../../lib/misc/expandData');
 function invoiceRouter() {
 	const router = express.Router();
 	
+	// Create invoice
 	router.post("/", async(req, res) => {
 		try {
 			const {
@@ -25,6 +26,40 @@ function invoiceRouter() {
 			const extra = await expandData(req);
 			return res.send({
 				...extra
+			});
+		} catch(err) {
+			console.error(err);
+			
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
+	// Retrieve invoices
+	router.get("/", async (req, res) => {
+		try {
+			const {
+				Invoice
+			} = req.models;
+			
+			const invoices = await Invoice.find({})
+				.populate("client")
+				.populate({
+					path: "invoices.product",
+					model: "Product"
+				});
+			
+			return res.send({
+				invoices
 			});
 		} catch(err) {
 			console.error(err);
