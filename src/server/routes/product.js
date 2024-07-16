@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 
-const { createProductFolder, productFolder } = require("../../lib/folder/product");
+const { createProductFolder, productFolder, insertProductImage } = require("../../lib/folder/product");
 const productImage = require("../../lib/upload/productImage");
 const expandData = require("../../lib/misc/expandData");
 
@@ -21,28 +21,7 @@ function productRouter() {
 			
 			const product = new Product(req.body);
 			
-			console.log(`File: `, req.file);
-			const file = req.file
-			if(file) {
-				const id = product.id.toString();
-				
-				// Products could have more things other than images so we create a folder for it
-				// Create product folder
-				createProductFolder(id);
-				
-				// Move image to product folder
-				const extension = file.mimetype.split("/")[1];
-				const filename = `image.${extension}`;
-				const folder = productFolder(id);
-				const newFilePath = path.join(folder, filename);
-				
-				fs.rename(file.path, newFilePath, function (err) {
-					console.error(err);
-				});
-				
-				// Insert file name
-				product.image = filename;
-			}
+			insertProductImage(req.file, product);
 			
 			await product.save();
 			
@@ -120,6 +99,68 @@ function productRouter() {
 				});
 		} catch(err) {
 			console.error(err);
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
+	// FIXME: When using postman the body is not read by express or postman doesn't sends it
+	router.put("/:productId", productImage, async (req, res) => {
+		try {
+			const {
+				Product
+			} = req.models;
+			const productId = req.params.productId;
+			
+			// Get product
+			const product = await Product.findById(productId);
+			if(!product) {
+				req.flash("messages", [{
+					message: "Product doesn't exists",
+					type: "error"
+				}]);
+				
+				const extra = await expandData(req);
+				return res
+					.status(404)
+					.send({
+						...extra,
+					});
+			}
+			
+			insertProductImage(req.file, product);
+			
+			// This is a put request every field has to change even image
+			const newProductData = {
+				...req.body,
+				image: product.image,
+			};
+			
+			const newProduct = await Product.findOneAndUpdate(
+				{
+					_id: productId
+				},
+				newProductData,
+				{
+					new: true,
+				}
+			);
+			
+			return res.send({
+				product: newProduct
+			});
+		} catch(err) {
+			console.error(err);
+			
 			return res
 				.status(500)
 				.send({

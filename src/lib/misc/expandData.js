@@ -17,22 +17,22 @@ async function expandData(req, options = {
 		throw Error("You must pass 'req' for expand data to work");
 	}
 	
-	const {
-		User
-	} = req.models;
+	// const {
+	// 	User
+	// } = req.models;
 	
-	// User
-	let user = undefined;
-	if(req.user) {
-		// Update session if required
-		if(!options.useSession) {
-			user = await User.findByPk(req.user.id, {
-				raw: true,
-			});
-		} else {
-			user = JSON.parse(JSON.stringify(req.user));
-		}
-	}
+	// // User
+	// let user = undefined;
+	// if(req.user) {
+	// 	// Update session if required
+	// 	if(!options.useSession) {
+	// 		user = await User.findByPk(req.user.id, {
+	// 			raw: true,
+	// 		});
+	// 	} else {
+	// 		user = JSON.parse(JSON.stringify(req.user));
+	// 	}
+	// }
 	
 	// Messages
 	let messages = [];
