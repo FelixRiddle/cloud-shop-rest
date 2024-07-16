@@ -14,6 +14,9 @@ function createProductModel(mongoose) {
 		},
 		image: {
 			type: String,
+		},
+		stock: {
+			type: Number,
 		}
 	});
 	
