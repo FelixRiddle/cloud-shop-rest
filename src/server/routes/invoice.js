@@ -78,6 +78,55 @@ function invoiceRouter() {
 		}
 	});
 	
+	// Single invoice
+	router.get("/:invoiceId", async (req, res) => {
+		try {
+			const {
+				Invoice
+			} = req.models;
+			
+			const invoiceId = req.params.invoiceId;
+			const invoice = await Invoice.findById(invoiceId)
+				.populate("client")
+				.populate({
+					path: "invoices.product",
+					model: "Product"
+				});
+			
+			if(!invoice) {
+				req.flash("messages", [{
+					message: "Error 404: Not found",
+					type: "error"
+				}]);
+				
+				const extra = await expandData(req);
+				return res
+					.status(404)
+					.send({
+						...extra
+					});
+			}
+			
+			return res.send({
+				invoice
+			});
+		} catch(err) {
+			console.error(err);
+			
+			req.flash("messages", [{
+				message: "Error 500: Internal error",
+				type: "error"
+			}]);
+			
+			const extra = await expandData(req);
+			return res
+				.status(500)
+				.send({
+					...extra
+				});
+		}
+	});
+	
 	return router;
 }
 
