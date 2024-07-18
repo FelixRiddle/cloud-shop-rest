@@ -13,6 +13,7 @@ const mongoUri = require("../lib/config/mongoUri");
 const createClientModel = require("../models/Client");
 const createProductModel = require("../models/Product");
 const createInvoiceModel = require("../models/Invoice");
+const { DEVELOPMENT } = require("../lib/config/env");
 
 /**
  * Main function
@@ -53,17 +54,22 @@ async function startServer(conn) {
 	// Use flash
 	app.use(flash());
 	
+	// Whitelist
+	let whitelist = [];
+	let frontUrl = process.env.FRONTEND_URL;
+	if(!frontUrl && DEVELOPMENT) {
+		// NextJS frontend
+		frontUrl = "http://localhost:3009";
+	}
+	whitelist.push(frontUrl);
 	app.use(cors({
 		origin: function(origin, callback) {
-			let frontUrl = process.env.FRONTEND_URL;
-			if(!frontUrl && process.env.NODE_ENV === 'development') {
-				// NextJS frontend
-				frontUrl = "http://localhost:3009";
+			console.log(`Origin: `, origin);
+			if (whitelist.indexOf(origin) !== -1) {
+				callback(null, true)
+			} else {
+				callback(new Error('Not allowed by CORS'))
 			}
-			
-			return callback(null, [
-				frontUrl,
-			]);
 		}
 	}));
 	
