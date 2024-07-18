@@ -7,6 +7,7 @@ const MongoStore = require("connect-mongo");
 const path = require("path");
 const session = require("express-session");
 const { v4: uuidv4 } = require("uuid");
+const color = require("ansi-color");
 
 const mainRouter = require("./routes");
 const mongoUri = require("../lib/config/mongoUri");
@@ -64,7 +65,6 @@ async function startServer(conn) {
 	whitelist.push(frontUrl);
 	app.use(cors({
 		origin: function(origin, callback) {
-			console.log(`Origin: `, origin);
 			if (whitelist.indexOf(origin) !== -1) {
 				callback(null, true)
 			} else {
@@ -82,6 +82,34 @@ async function startServer(conn) {
 	// Middleware
 	app.use((req, res, next) => {
 		req.models = models;
+		
+		switch(req.method) {
+			case "POST": {
+				const method = color.set(`${req.method}`, "yellow");
+				console.log(`${method} ${req.originalUrl}`);
+				break;
+			}
+			case "GET": {
+				const method = color.set(`${req.method}`, "green");
+				console.log(`${method} ${req.originalUrl}`);
+				break;
+			}
+			case "DELETE": {
+				const method = color.set(`${req.method}`, "red");
+				console.log(`${method} ${req.originalUrl}`);
+				break;
+			}
+			case "PUT": {
+				const method = color.set(`${req.method}`, "blue");
+				console.log(`${method} ${req.originalUrl}`);
+				break;
+			}
+			case "PATCH": {
+				const method = color.set(`${req.method}`, "magenta");
+				console.log(`${method} ${req.originalUrl}`);
+				break;
+			}
+		}
 		
 		next();
 	});
