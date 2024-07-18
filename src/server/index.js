@@ -65,6 +65,11 @@ async function startServer(conn) {
 	whitelist.push(frontUrl);
 	app.use(cors({
 		origin: function(origin, callback) {
+			// Postman error, there's no origin, testing only
+			if(!origin && DEVELOPMENT){
+			  return callback(null, true);
+			}
+			
 			if (whitelist.indexOf(origin) !== -1) {
 				callback(null, true)
 			} else {
