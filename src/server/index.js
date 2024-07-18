@@ -58,7 +58,7 @@ async function startServer(conn) {
 			let frontUrl = process.env.FRONTEND_URL;
 			if(!frontUrl && process.env.NODE_ENV === 'development') {
 				// NextJS frontend
-				frontUrl = "http://localhost:3007";
+				frontUrl = "http://localhost:3009";
 			}
 			
 			return callback(null, [
