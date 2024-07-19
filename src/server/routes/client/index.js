@@ -67,7 +67,6 @@ function clientRouter() {
 			const clientId = req.params.clientId;
 			
 			const client = await Client.findById(clientId);
-			
 			if(!client) {
 				return res.status(404)
 					.send({

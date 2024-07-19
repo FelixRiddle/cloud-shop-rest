@@ -119,6 +119,7 @@ async function startServer(conn) {
 		next();
 	});
 	
+	app.use("/public", express.static("public"));
 	app.use(mainRouter());
 	
 	const PORT = process.env.PORT || 3008;
