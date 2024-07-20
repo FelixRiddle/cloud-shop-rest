@@ -21,6 +21,8 @@ function createInvoiceModel(mongoose) {
 		total: {
 			type: Number,
 		}
+	}, {
+		timestamps: true,
 	});
 	
 	const Invoice = mongoose.model("Invoice", invoiceSchema);

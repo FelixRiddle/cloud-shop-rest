@@ -14,7 +14,10 @@ function searchRouter() {
 			} = req.models;
 			
 			const products = await Product.find({
-				name: new RegExp(query, "i"),
+				name: {
+					$regex: query,
+					$options: "i"
+				},
 			});
 			
 			if(!products) {

@@ -29,6 +29,8 @@ function createClientModel(mongoose) {
 			type: String,
 			trim: true,
 		}
+	}, {
+		timestamps: true,
 	});
 	
 	const Client = mongoose.model("Client", clientSchema);

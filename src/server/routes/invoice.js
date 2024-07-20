@@ -14,8 +14,62 @@ function invoiceRouter() {
 				Invoice
 			} = req.models;
 			
-			const invoice = new Invoice(req.body);
+			const newInvoice = { ...req.body };
 			
+			// Validate single product
+			if(!newInvoice.products.length > 0) {
+				req.flash("messages", [{
+					message: "Error 401: At least one product is required",
+					type: "error"
+				}]);
+				
+				const extra = await expandData(req);
+				return res
+					.status(401)
+					.send({
+						...extra
+					});
+			}
+			
+			// Validate quantity is at least 1
+			let totalQuantity = 0;
+			newInvoice.products.map((product) => {
+				totalQuantity += product.quantity;
+			});
+			if(totalQuantity === 0) {
+				req.flash("messages", [{
+					message: "Error 401: Product/s quantity have a total sum of 0",
+					type: "error",
+					// Not allowed in the frontend
+					tampering: true,
+				}]);
+				
+				const extra = await expandData(req);
+				return res
+					.status(401)
+					.send({
+						...extra
+					});
+			}
+			
+			// Remove other fields
+			newInvoice.invoices = newInvoice.products.map((product) => {
+				return {
+					product: product.product,
+					quantity: product.quantity,
+				};
+			});
+			delete newInvoice.products;
+			
+			// Calculate total
+			let newTotal = 0;
+			req.body.products.map((product) => {
+				newTotal = (product.price * product.quantity);
+			});
+			newInvoice.total = newTotal;
+			
+			// Insert
+			const invoice = new Invoice(newInvoice);
 			await invoice.save();
 			
 			req.flash("messages", [{

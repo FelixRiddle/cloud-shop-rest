@@ -18,6 +18,8 @@ function createProductModel(mongoose) {
 		stock: {
 			type: Number,
 		}
+	}, {
+		timestamps: true,
 	});
 	
 	const Product = mongoose.model("Product", productSchema);
