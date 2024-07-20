@@ -1,16 +1,17 @@
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
 
-const { createProductFolder, productFolder, insertProductImage } = require("../../lib/folder/product");
-const productImage = require("../../lib/upload/productImage");
-const expandData = require("../../lib/misc/expandData");
+const { insertProductImage } = require("../../../lib/folder/product");
+const productImage = require("../../../lib/upload/productImage");
+const expandData = require("../../../lib/misc/expandData");
+const searchRouter = require("./search");
 
 /**
  * Products router
  */
 function productRouter() {
 	const router = express.Router();
+	
+	router.use("/search", searchRouter());
 	
 	// Create product
 	router.post("/", productImage, async (req, res) => {
