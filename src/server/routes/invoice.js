@@ -64,7 +64,7 @@ function invoiceRouter() {
 			// Calculate total
 			let newTotal = 0;
 			req.body.products.map((product) => {
-				newTotal = (product.price * product.quantity);
+				newTotal += (product.price * product.quantity);
 			});
 			newInvoice.total = newTotal;
 			
