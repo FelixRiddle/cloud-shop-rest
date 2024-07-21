@@ -15,6 +15,7 @@ const createClientModel = require("../models/Client");
 const createProductModel = require("../models/Product");
 const createInvoiceModel = require("../models/Invoice");
 const { DEVELOPMENT } = require("../lib/config/env");
+const createUserModel = require("../models/User");
 
 /**
  * Main function
@@ -82,6 +83,7 @@ async function startServer(conn) {
 		Client: createClientModel(conn),
 		Product: createProductModel(conn),
 		Invoice: createInvoiceModel(conn),
+		User: createUserModel(conn),
 	};
 	
 	// Middleware

@@ -3,6 +3,7 @@ const express = require("express");
 const clientRouter = require("./client");
 const productRouter = require("./product");
 const invoiceRouter = require("./invoice");
+const authRouter = require("./auth");
 
 /**
  * Main router
@@ -10,6 +11,7 @@ const invoiceRouter = require("./invoice");
 function mainRouter() {
 	const router = express.Router();
 	
+	router.use("/auth", authRouter());
 	router.use("/client", clientRouter());
 	router.use("/invoice", invoiceRouter());
 	router.use("/product", productRouter());
