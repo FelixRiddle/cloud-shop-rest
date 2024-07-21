@@ -18,6 +18,39 @@ const { DEVELOPMENT } = require("../lib/config/env");
 const createUserModel = require("../models/User");
 
 /**
+ * Print method and route
+ */
+function printRoute(req) {
+	switch(req.method) {
+		case "POST": {
+			const method = color.set(`${req.method}`, "yellow");
+			console.log(`${method} ${req.originalUrl}`);
+			break;
+		}
+		case "GET": {
+			const method = color.set(`${req.method}`, "green");
+			console.log(`${method} ${req.originalUrl}`);
+			break;
+		}
+		case "DELETE": {
+			const method = color.set(`${req.method}`, "red");
+			console.log(`${method} ${req.originalUrl}`);
+			break;
+		}
+		case "PUT": {
+			const method = color.set(`${req.method}`, "blue");
+			console.log(`${method} ${req.originalUrl}`);
+			break;
+		}
+		case "PATCH": {
+			const method = color.set(`${req.method}`, "magenta");
+			console.log(`${method} ${req.originalUrl}`);
+			break;
+		}
+	}
+}
+
+/**
  * Main function
  */
 async function startServer(conn) {
@@ -65,6 +98,8 @@ async function startServer(conn) {
 	}
 	whitelist.push(frontUrl);
 	app.use(cors({
+		// Allow the use of credentials
+		credentials: true,
 		origin: function(origin, callback) {
 			// Postman error, there's no origin, testing only
 			if(!origin && DEVELOPMENT){
@@ -72,9 +107,11 @@ async function startServer(conn) {
 			}
 			
 			if (whitelist.indexOf(origin) !== -1) {
-				callback(null, true)
+				callback(null, true);
 			} else {
-				callback(new Error('Not allowed by CORS'))
+				const error = new Error('Not allowed by CORS');
+				console.error(err);
+				callback(error);
 			}
 		}
 	}));
@@ -90,33 +127,10 @@ async function startServer(conn) {
 	app.use((req, res, next) => {
 		req.models = models;
 		
-		switch(req.method) {
-			case "POST": {
-				const method = color.set(`${req.method}`, "yellow");
-				console.log(`${method} ${req.originalUrl}`);
-				break;
-			}
-			case "GET": {
-				const method = color.set(`${req.method}`, "green");
-				console.log(`${method} ${req.originalUrl}`);
-				break;
-			}
-			case "DELETE": {
-				const method = color.set(`${req.method}`, "red");
-				console.log(`${method} ${req.originalUrl}`);
-				break;
-			}
-			case "PUT": {
-				const method = color.set(`${req.method}`, "blue");
-				console.log(`${method} ${req.originalUrl}`);
-				break;
-			}
-			case "PATCH": {
-				const method = color.set(`${req.method}`, "magenta");
-				console.log(`${method} ${req.originalUrl}`);
-				break;
-			}
-		}
+		printRoute(req);
+		
+		// // Print session
+		// console.log(req.session);
 		
 		next();
 	});
