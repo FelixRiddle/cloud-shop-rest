@@ -5,6 +5,7 @@ const productRouter = require("./product");
 const invoiceRouter = require("./invoice");
 const authRouter = require("./auth");
 const userRouter = require("./user");
+const userVanguard = require("../../lib/middleware/userVanguard");
 
 /**
  * Main router
@@ -13,10 +14,10 @@ function mainRouter() {
 	const router = express.Router();
 	
 	router.use("/auth", authRouter());
-	router.use("/client", clientRouter());
-	router.use("/invoice", invoiceRouter());
-	router.use("/product", productRouter());
-	router.use("/user", userRouter());
+	router.use("/client", userVanguard, clientRouter());
+	router.use("/invoice", userVanguard, invoiceRouter());
+	router.use("/product", userVanguard, productRouter());
+	router.use("/user", userVanguard, userRouter());
 	
 	router.use((req, res) => {
 		return res

@@ -148,7 +148,8 @@ function authRouter() {
 			return res
 				.status(200)
 				.send({
-					...extra
+					...extra,
+					user,
 				});
 		} catch(err) {
 			console.error(err);
