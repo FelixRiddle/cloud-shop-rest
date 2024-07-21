@@ -129,8 +129,8 @@ async function startServer(conn) {
 		
 		printRoute(req);
 		
-		// // Print session
-		// console.log(req.session);
+		// Print session
+		console.log(req.session);
 		
 		next();
 	});

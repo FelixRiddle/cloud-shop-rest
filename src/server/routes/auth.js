@@ -122,6 +122,9 @@ function authRouter() {
 					});
 			}
 			
+			// Delete password
+			delete user.password;
+			
 			// I've come to the conclusion that jwt is no longer needed
 			// Store user in the session object
 			req.session.user = user;

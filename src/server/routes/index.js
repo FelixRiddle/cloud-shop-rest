@@ -4,6 +4,7 @@ const clientRouter = require("./client");
 const productRouter = require("./product");
 const invoiceRouter = require("./invoice");
 const authRouter = require("./auth");
+const userRouter = require("./user");
 
 /**
  * Main router
@@ -15,6 +16,7 @@ function mainRouter() {
 	router.use("/client", clientRouter());
 	router.use("/invoice", invoiceRouter());
 	router.use("/product", productRouter());
+	router.use("/user", userRouter());
 	
 	router.use((req, res) => {
 		return res
