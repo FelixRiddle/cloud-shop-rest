@@ -29,16 +29,13 @@ function userRouter() {
 		} catch(err) {
 			console.error(err);
 			
-			req.flash("messages", [{
-				message: "Error 500: Internal error",
-				type: "error"
-			}]);
-			
-			const extra = await expandData(req);
 			return res
 				.status(500)
 				.send({
-					...extra
+					messages: [{
+						message: "Error 500: Internal error",
+						type: "error"
+					}]
 				});
 		}
 	});
